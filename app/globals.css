@@ -1,0 +1,117 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --purple: #6B21A8;
+  --purple-mid: #7C3AED;
+  --purple-light: #A855F7;
+  --orange: #EA580C;
+  --orange-mid: #F97316;
+  --orange-light: #FB923C;
+}
+
+* { box-sizing: border-box; padding: 0; margin: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  color: #1e293b;
+  background: #ffffff;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Poppins', system-ui, sans-serif;
+}
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: #f8fafc; }
+::-webkit-scrollbar-thumb { background: #7C3AED; border-radius: 10px; }
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 bg-[#7C3AED] hover:bg-[#6B21A8] text-white font-semibold px-7 py-3.5 rounded-full transition-all duration-300 transform hover:scale-[1.03] shadow-lg hover:shadow-purple-500/30;
+  }
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 bg-[#F97316] hover:bg-[#EA580C] text-white font-semibold px-7 py-3.5 rounded-full transition-all duration-300 transform hover:scale-[1.03] shadow-lg hover:shadow-orange-500/30;
+  }
+  .btn-outline {
+    @apply inline-flex items-center justify-center gap-2 border-2 border-[#7C3AED] text-[#7C3AED] hover:bg-[#7C3AED] hover:text-white font-semibold px-7 py-3.5 rounded-full transition-all duration-300;
+  }
+  .btn-white {
+    @apply inline-flex items-center justify-center gap-2 bg-white text-[#7C3AED] hover:bg-gray-50 font-semibold px-7 py-3.5 rounded-full transition-all duration-300 shadow-md;
+  }
+  .card {
+    @apply bg-white rounded-2xl shadow-[0_2px_20px_rgba(0,0,0,0.06)] border border-gray-100/80 hover:shadow-[0_8px_40px_rgba(124,58,237,0.12)] hover:border-purple-100 transition-all duration-300;
+  }
+  .section-tag {
+    @apply inline-flex items-center gap-2 text-[#7C3AED] bg-purple-50 border border-purple-100 text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-full;
+  }
+  .section-title {
+    @apply text-3xl md:text-4xl lg:text-5xl font-bold text-slate-900 font-heading leading-tight;
+  }
+  .section-subtitle {
+    @apply text-lg text-slate-500 leading-relaxed max-w-2xl;
+  }
+  .input-field {
+    @apply w-full px-4 py-3.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 text-gray-700 bg-white placeholder:text-gray-400 text-sm;
+  }
+  .badge {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold;
+  }
+  .gradient-text {
+    @apply bg-gradient-to-r from-[#7C3AED] to-[#F97316] bg-clip-text text-transparent;
+  }
+}
+
+/* Chat bubbles */
+.chat-bubble-user {
+  @apply bg-[#7C3AED] text-white rounded-2xl rounded-br-sm px-4 py-2.5 max-w-xs ml-auto shadow-sm;
+}
+.chat-bubble-admin {
+  @apply bg-white text-gray-800 rounded-2xl rounded-bl-sm px-4 py-2.5 max-w-xs border border-gray-100 shadow-sm;
+}
+
+/* Product card hover effect */
+.product-card:hover .product-image { transform: scale(1.06); }
+.product-image { transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+
+/* Animated gradient border */
+@keyframes borderGlow {
+  0%, 100% { border-color: rgba(124, 58, 237, 0.4); }
+  50% { border-color: rgba(249, 115, 22, 0.4); }
+}
+
+/* Float animation */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-12px); }
+}
+
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-18px) rotate(3deg); }
+}
+
+.animate-float { animation: float 5s ease-in-out infinite; }
+.animate-float-slow { animation: float-slow 7s ease-in-out infinite; }
+
+/* Section spacing */
+.section-py { @apply py-20 md:py-28; }
+
+/* Grid pattern background */
+.bg-grid {
+  background-image:
+    linear-gradient(rgba(124, 58, 237, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(124, 58, 237, 0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* Gradient backgrounds */
+.bg-hero {
+  background: linear-gradient(135deg, #0F0720 0%, #1A0A3E 40%, #0A1628 100%);
+}
