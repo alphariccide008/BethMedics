@@ -31,7 +31,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <AuthProvider>
           <Navbar />
           <CartSidebar />
-          <main>{children}</main>
+          <main className="min-h-screen">{children}</main>
           <ChatWidget />
           <Footer />
           <Toaster

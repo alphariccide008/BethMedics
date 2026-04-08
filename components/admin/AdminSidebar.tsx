@@ -112,7 +112,7 @@ export default function AdminSidebar() {
       {/* Mobile toggle button */}
       <button
         onClick={() => setMobileOpen(true)}
-        className="lg:hidden fixed top-4 left-4 z-50 w-11 h-11 bg-white rounded-xl shadow-lg border border-gray-100 flex items-center justify-center"
+        className="lg:hidden fixed top-4 left-4 z-50 w-11 h-11 bg-white rounded-xl shadow-lg border border-gray-100 flex items-center justify-center relative"
       >
         <Menu size={20} className="text-gray-700" />
         {unreadChats > 0 && (

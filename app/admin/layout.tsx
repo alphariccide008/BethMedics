@@ -18,8 +18,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   if (status === 'loading') {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader2 size={40} className="animate-spin text-brand-purple" />
+      <div className="fixed inset-0 flex items-center justify-center bg-gray-50 z-50">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#7C3AED] to-[#6B21A8] flex items-center justify-center shadow-lg">
+            <span className="text-white font-black text-xl">B</span>
+          </div>
+          <Loader2 size={28} className="animate-spin text-[#7C3AED]" />
+        </div>
       </div>
     );
   }
@@ -28,10 +33,15 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   return (
     <div className="flex min-h-screen bg-gray-50">
+      {/* Fixed sidebar — full viewport height */}
       <AdminSidebar />
-      <main className="flex-1 ml-0 lg:ml-64 min-h-screen">
-        {children}
-      </main>
+
+      {/* Main content — offset by sidebar width on desktop */}
+      <div className="flex-1 w-full lg:pl-64 min-h-screen overflow-x-hidden">
+        <div className="min-h-screen">
+          {children}
+        </div>
+      </div>
     </div>
   );
 }
