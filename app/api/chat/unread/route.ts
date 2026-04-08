@@ -3,6 +3,8 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/authOptions';
 import { query } from '@/lib/db';
 
+export const dynamic = 'force-dynamic';
+
 // Returns count of unread customer messages for the admin
 export async function GET() {
   try {
