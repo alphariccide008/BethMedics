@@ -24,12 +24,19 @@ export default function ChatWidget() {
   const [input, setInput] = useState('');
   const [sending, setSending] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [seenCount, setSeenCount] = useState(0);
   const panelRef = useRef<HTMLDivElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const pollRef = useRef<NodeJS.Timeout | null>(null);
+  const bgPollRef = useRef<NodeJS.Timeout | null>(null);
 
   // NOTE: all hooks must be declared BEFORE any conditional return
   const isAdmin = session?.user?.role === 'ADMIN';
+
+  // Count unread = messages from ADMIN that arrived while widget was closed
+  const unreadCount = messages.filter(m => m.senderRole === 'ADMIN').length > seenCount
+    ? messages.filter(m => m.senderRole === 'ADMIN').length - seenCount
+    : 0;
 
   const fetchMessages = useCallback(async () => {
     if (!session || isAdmin) return;
@@ -42,6 +49,21 @@ export default function ChatWidget() {
       }
     } catch {}
   }, [session, isAdmin]);
+
+  // Background poll when closed — to detect new admin messages
+  useEffect(() => {
+    if (!open && session && !isAdmin) {
+      bgPollRef.current = setInterval(fetchMessages, 8000);
+    }
+    return () => { if (bgPollRef.current) clearInterval(bgPollRef.current); };
+  }, [open, session, isAdmin, fetchMessages]);
+
+  // When opening, mark all current admin messages as seen
+  useEffect(() => {
+    if (open) {
+      setSeenCount(messages.filter(m => m.senderRole === 'ADMIN').length);
+    }
+  }, [open]);
 
   useEffect(() => {
     if (open && session && !isAdmin) {
@@ -185,9 +207,13 @@ export default function ChatWidget() {
         className="w-14 h-14 bg-gradient-to-br from-[#7C3AED] to-[#6B21A8] text-white rounded-2xl shadow-[0_8px_30px_rgba(124,58,237,0.5)] flex items-center justify-center transition-all duration-300 hover:scale-110 relative hover:shadow-[0_12px_40px_rgba(124,58,237,0.6)]"
       >
         {open ? <X size={22} /> : <MessageCircle size={22} />}
-        {!open && (
+        {!open && unreadCount > 0 ? (
+          <span className="absolute -top-2 -right-2 min-w-[22px] h-[22px] bg-[#F97316] text-white text-xs font-black rounded-full border-2 border-white flex items-center justify-center px-1 animate-bounce">
+            {unreadCount > 9 ? '9+' : unreadCount}
+          </span>
+        ) : !open ? (
           <span className="absolute -top-1 -right-1 w-4 h-4 bg-[#F97316] rounded-full border-2 border-white animate-pulse" />
-        )}
+        ) : null}
       </button>
     </div>
   );

@@ -9,12 +9,18 @@ import Footer from '@/components/Footer';
 
 export const metadata: Metadata = {
   title: 'BethMedic — Premium Medical & Health Products',
-  description: 'Your trusted source for pharmaceutical-grade supplements, medical devices, and health products. Delivered with care.',
-  keywords: 'medical, health, supplements, medical devices, pharmacy, BethMedic',
+  description: 'Nigeria\'s most trusted source for pharmaceutical-grade supplements, certified medical devices, and expert health guidance. Founded by Dr. Precious Nneoma Ojiugo.',
+  keywords: 'medical, health, supplements, medical devices, pharmacy, BethMedic, Nigeria, Naira, pharmaceutical',
+  icons: {
+    icon: '/icon.svg',
+    shortcut: '/icon.svg',
+    apple: '/icon.svg',
+  },
   openGraph: {
     title: 'BethMedic — Premium Medical & Health Products',
-    description: 'Your trusted source for premium health & medical products.',
+    description: 'Nigeria\'s most trusted source for premium health & medical products. Founded by Dr. Precious Nneoma Ojiugo.',
     type: 'website',
+    locale: 'en_NG',
   },
 };
 

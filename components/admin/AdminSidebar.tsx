@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { signOut } from 'next-auth/react';
@@ -8,15 +8,15 @@ import {
   LogOut, Menu, X, Home, ChevronRight
 } from 'lucide-react';
 
-const navItems = [
-  { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/admin/products', label: 'Products', icon: Package },
-  { href: '/admin/orders', label: 'Orders', icon: ShoppingBag },
-  { href: '/admin/chat', label: 'Customer Chat', icon: MessageSquare },
-];
-
-function SidebarContent({ onClose }: { onClose?: () => void }) {
+function SidebarContent({ onClose, unreadChats }: { onClose?: () => void; unreadChats: number }) {
   const pathname = usePathname();
+
+  const navItems = [
+    { href: '/admin', label: 'Dashboard', icon: LayoutDashboard, badge: 0 },
+    { href: '/admin/products', label: 'Products', icon: Package, badge: 0 },
+    { href: '/admin/orders', label: 'Orders', icon: ShoppingBag, badge: 0 },
+    { href: '/admin/chat', label: 'Customer Chat', icon: MessageSquare, badge: unreadChats },
+  ];
 
   return (
     <div className="flex flex-col h-full bg-white">
@@ -35,7 +35,7 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
 
       {/* Nav */}
       <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
-        {navItems.map(({ href, label, icon: Icon }) => {
+        {navItems.map(({ href, label, icon: Icon, badge }) => {
           const active = href === '/admin' ? pathname === '/admin' : pathname.startsWith(href);
           return (
             <Link
@@ -49,7 +49,12 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
               }`}
             >
               <Icon size={20} className="flex-shrink-0" />
-              <span className="font-semibold text-sm">{label}</span>
+              <span className="font-semibold text-sm flex-1">{label}</span>
+              {badge > 0 && !active && (
+                <span className="min-w-[20px] h-5 bg-[#F97316] text-white text-xs font-black rounded-full flex items-center justify-center px-1">
+                  {badge > 99 ? '99+' : badge}
+                </span>
+              )}
               {active && <ChevronRight size={14} className="ml-auto" />}
             </Link>
           );
@@ -79,12 +84,29 @@ function SidebarContent({ onClose }: { onClose?: () => void }) {
 
 export default function AdminSidebar() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [unreadChats, setUnreadChats] = useState(0);
+
+  // Poll for unread customer messages every 10 seconds
+  useEffect(() => {
+    const fetchUnread = async () => {
+      try {
+        const res = await fetch('/api/chat/unread');
+        if (res.ok) {
+          const data = await res.json();
+          setUnreadChats(data.count ?? 0);
+        }
+      } catch {}
+    };
+    fetchUnread();
+    const interval = setInterval(fetchUnread, 10000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <>
-      {/* Desktop sidebar — fixed full height, starts at top-0 since Navbar is hidden on admin */}
+      {/* Desktop sidebar */}
       <aside className="hidden lg:flex fixed left-0 top-0 bottom-0 w-64 border-r border-gray-100 shadow-sm z-30 flex-col">
-        <SidebarContent />
+        <SidebarContent unreadChats={unreadChats} />
       </aside>
 
       {/* Mobile toggle button */}
@@ -93,6 +115,11 @@ export default function AdminSidebar() {
         className="lg:hidden fixed top-4 left-4 z-50 w-11 h-11 bg-white rounded-xl shadow-lg border border-gray-100 flex items-center justify-center"
       >
         <Menu size={20} className="text-gray-700" />
+        {unreadChats > 0 && (
+          <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] bg-[#F97316] text-white text-[10px] font-black rounded-full flex items-center justify-center px-0.5">
+            {unreadChats > 9 ? '9+' : unreadChats}
+          </span>
+        )}
       </button>
 
       {/* Mobile drawer */}
@@ -109,7 +136,7 @@ export default function AdminSidebar() {
             >
               <X size={16} />
             </button>
-            <SidebarContent onClose={() => setMobileOpen(false)} />
+            <SidebarContent unreadChats={unreadChats} onClose={() => setMobileOpen(false)} />
           </aside>
         </>
       )}
