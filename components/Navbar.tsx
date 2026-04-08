@@ -29,9 +29,6 @@ export default function Navbar() {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const navRef = useRef<HTMLElement>(null);
 
-  // Hide navbar completely on admin pages
-  if (pathname?.startsWith('/admin')) return null;
-
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
     window.addEventListener('scroll', onScroll);
@@ -46,6 +43,9 @@ export default function Navbar() {
       );
     }
   }, []);
+
+  // Hide navbar completely on admin pages (after all hooks)
+  if (pathname?.startsWith('/admin')) return null;
 
   const isScrolled = scrolled;
   const textColor = isScrolled ? 'text-white' : 'text-slate-600';

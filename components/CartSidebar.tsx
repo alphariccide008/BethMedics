@@ -10,7 +10,6 @@ import { gsap } from 'gsap';
 export default function CartSidebar() {
   const pathname = usePathname();
   const { items, isOpen, closeCart, removeItem, updateQuantity, total, count } = useCartStore();
-  if (pathname?.startsWith('/admin')) return null;
   const sidebarRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
 
@@ -24,6 +23,9 @@ export default function CartSidebar() {
       gsap.to(overlayRef.current, { opacity: 0, duration: 0.3 });
     }
   }, [isOpen]);
+
+  // Must be after all hooks
+  if (pathname?.startsWith('/admin')) return null;
 
   return (
     <>
